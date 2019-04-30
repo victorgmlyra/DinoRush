@@ -22,9 +22,9 @@ screen = pygame.display.set_mode(scr_size)
 clock = pygame.time.Clock()
 pygame.display.set_caption("T-Rex Rush")
 
-jump_sound = pygame.mixer.Sound('sprites/jump.wav')
-die_sound = pygame.mixer.Sound('sprites/die.wav')
-checkPoint_sound = pygame.mixer.Sound('sprites/checkPoint.wav')
+jump_sound = pygame.mixer.Sound('Game/sprites/jump.wav')
+die_sound = pygame.mixer.Sound('Game/sprites/die.wav')
+checkPoint_sound = pygame.mixer.Sound('Game/sprites/checkPoint.wav')
 
 def load_image(
     name,
@@ -33,7 +33,7 @@ def load_image(
     colorkey=None,
     ):
 
-    fullname = os.path.join('sprites', name)
+    fullname = os.path.join('Game/sprites', name)
     image = pygame.image.load(fullname)
     image = image.convert()
     if colorkey is not None:
@@ -54,7 +54,7 @@ def load_sprite_sheet(
         scaley = -1,
         colorkey = None,
         ):
-    fullname = os.path.join('sprites',sheetname)
+    fullname = os.path.join('Game/sprites',sheetname)
     sheet = pygame.image.load(fullname)
     sheet = sheet.convert()
 
@@ -385,22 +385,23 @@ def gameplay():
                     if event.type == pygame.QUIT:
                         gameQuit = True
                         gameOver = True
+                        
+                # Mudado a forma de controlar o dinossauro
+                keys = pygame.key.get_pressed()
+                if not playerDino.isJumping:
+                    if keys[pygame.K_UP] or keys[pygame.K_SPACE]:
+                        if playerDino.rect.bottom == int(0.98*height) and not playerDino.isDucking:
+                            playerDino.isJumping = True
+                            if pygame.mixer.get_init() != None:
+                                jump_sound.play()
+                            playerDino.movement[1] = -1*playerDino.jumpSpeed
 
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_SPACE:
-                            if playerDino.rect.bottom == int(0.98*height):
-                                playerDino.isJumping = True
-                                if pygame.mixer.get_init() != None:
-                                    jump_sound.play()
-                                playerDino.movement[1] = -1*playerDino.jumpSpeed
+                    if keys[pygame.K_DOWN]: 
+                        if not (playerDino.isJumping and playerDino.isDead):
+                            playerDino.isDucking = True
+                    else:
+                        playerDino.isDucking = False
 
-                        if event.key == pygame.K_DOWN:
-                            if not (playerDino.isJumping and playerDino.isDead):
-                                playerDino.isDucking = True
-
-                    if event.type == pygame.KEYUP:
-                        if event.key == pygame.K_DOWN:
-                            playerDino.isDucking = False
             for c in cacti:
                 c.movement[0] = -1*gamespeed
                 if pygame.sprite.collide_mask(playerDino,c):
@@ -501,9 +502,9 @@ def gameplay():
     pygame.quit()
     quit()
 
-def main():
+def play():
     isGameQuit = introscreen()
     if not isGameQuit:
         gameplay()
 
-main()
+play()

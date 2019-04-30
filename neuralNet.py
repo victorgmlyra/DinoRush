@@ -35,8 +35,8 @@ class neuralNet:
             out = fast_sigmoid(out)
         return out
         
-
-rede = neuralNet(2, 2)
-print(rede.run([1, 1]))
-print()
-print(rede.network)
+# Testes
+# rede = neuralNet(2, 2)
+# print(rede.run([1, 1]))
+# print()
+# print(rede.network)
