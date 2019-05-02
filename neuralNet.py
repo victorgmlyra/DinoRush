@@ -1,6 +1,6 @@
 import random
 import numpy as np
-
+import time
 
 # Activation functions
 def relu(x):
@@ -26,17 +26,17 @@ class neuralNet:
         else:
             self.network.append(np.random.randn(num_inputs + 1, num_outputs))
 
-    # Run Neural Network with given input
+    # Run Neural Network with given input    
     def run(self, inputs):
-        out = np.matrix(inputs)
+        out = np.array(inputs)
         for layer in self.network:
-            out = np.append(out, [[1]], axis=1)
-            out = out * np.matrix(layer)
+            out = np.append(out, [1])
+            out = np.dot(out, layer)
             out = fast_sigmoid(out)
         return out
         
 # Testes
-# rede = neuralNet(2, 2)
-# print(rede.run([1, 1]))
-# print()
-# print(rede.network)
+rede = neuralNet(2, 2, [2, 4])
+print(rede.run([1, 1]))
+print()
+print(rede.network)

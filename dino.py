@@ -190,6 +190,7 @@ class Cactus(pygame.sprite.Sprite):
         self.rect.left = width + self.rect.width
         self.image = self.images[random.randrange(0,3)]
         self.movement = [-1*speed,0]
+        self.pos = self.rect.left #dvdvxdvsdvs
 
     def draw(self):
         screen.blit(self.image,self.rect)
@@ -338,22 +339,46 @@ def introscreen():
         if temp_dino.isJumping == False and temp_dino.isBlinking == False:
             gameStart = True
 
+
+# Variáveis de jogo
+gamespeed = 4
+gameOver = False
+playerDino = Dino(44,47)
+
+cacti = pygame.sprite.Group()
+pteras = pygame.sprite.Group()
+clouds = pygame.sprite.Group()
+last_obstacle = pygame.sprite.Group()
+
+dists = []
+heights = []
+
 def gameplay():
     global high_score
+    global gamespeed
     gamespeed = 4
-    startMenu = False
+    global gameOver
     gameOver = False
-    gameQuit = False
+    global playerDino
     playerDino = Dino(44,47)
+    startMenu = False
+    gameQuit = False
     new_ground = Ground(-1*gamespeed)
     scb = Scoreboard()
     highsc = Scoreboard(width*0.78)
     counter = 0
 
+    global cacti 
     cacti = pygame.sprite.Group()
+    global pteras
     pteras = pygame.sprite.Group()
+    global clouds
     clouds = pygame.sprite.Group()
+    global last_obstacle
     last_obstacle = pygame.sprite.Group()
+
+    global dists
+    global heights
 
     Cactus.containers = cacti
     Ptera.containers = pteras
@@ -376,6 +401,9 @@ def gameplay():
         while startMenu:
             pass
         while not gameOver:
+            dists = [] 
+            heights = []
+
             if pygame.display.get_surface() == None:
                 print("Couldn't load display surface")
                 gameQuit = True
@@ -404,6 +432,8 @@ def gameplay():
 
             for c in cacti:
                 c.movement[0] = -1*gamespeed
+                heights.append(c.rect.centery)
+                dists.append(c.rect.left - playerDino.rect.right)
                 if pygame.sprite.collide_mask(playerDino,c):
                     playerDino.isDead = True
                     if pygame.mixer.get_init() != None:
@@ -411,6 +441,8 @@ def gameplay():
 
             for p in pteras:
                 p.movement[0] = -1*gamespeed
+                heights.append(p.rect.centery)
+                dists.append(p.rect.left - playerDino.rect.right)
                 if pygame.sprite.collide_mask(playerDino,p):
                     playerDino.isDead = True
                     if pygame.mixer.get_init() != None:
@@ -422,13 +454,13 @@ def gameplay():
                     last_obstacle.add(Cactus(gamespeed,40,40))
                 else:
                     for l in last_obstacle:
-                        if l.rect.right < width*0.7 and random.randrange(0,50) == 10:
+                        if l.rect.right < width*0.6 and random.randrange(0,50) == 10:
                             last_obstacle.empty()
                             last_obstacle.add(Cactus(gamespeed, 40, 40))
 
             if len(pteras) == 0 and random.randrange(0,200) == 10 and counter > 500:
                 for l in last_obstacle:
-                    if l.rect.right < width*0.8:
+                    if l.rect.right < width*0.6:
                         last_obstacle.empty()
                         last_obstacle.add(Ptera(gamespeed, 46, 40))
 
@@ -507,4 +539,4 @@ def play():
     if not isGameQuit:
         gameplay()
 
-play()
+# play()
