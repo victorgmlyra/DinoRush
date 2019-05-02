@@ -454,13 +454,13 @@ def gameplay():
                     last_obstacle.add(Cactus(gamespeed,40,40))
                 else:
                     for l in last_obstacle:
-                        if l.rect.right < width*0.6 and random.randrange(0,50) == 10:
+                        if l.rect.right < width*0.4 and random.randrange(0,50) == 10:
                             last_obstacle.empty()
                             last_obstacle.add(Cactus(gamespeed, 40, 40))
 
-            if len(pteras) == 0 and random.randrange(0,200) == 10 and counter > 500:
+            if len(pteras) == 0 and random.randrange(0,150) == 10 and counter > 500:
                 for l in last_obstacle:
-                    if l.rect.right < width*0.6:
+                    if l.rect.right < width*0.4:
                         last_obstacle.empty()
                         last_obstacle.add(Ptera(gamespeed, 46, 40))
 
