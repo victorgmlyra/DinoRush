@@ -8,6 +8,5 @@ th = threading.Thread(target = dino.play)
 th.start()
 
 while True:
-    print(dino.dists, "  ", dino.heights)
-
+    print(dino.dists, dino.heights, dino.gamespeed)
 th.join()
