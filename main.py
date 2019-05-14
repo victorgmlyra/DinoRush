@@ -13,4 +13,9 @@ while True:
     time.sleep(2)
     print(dino.dists, dino.heights, dino.gamespeed, dino.keys)
     x+=1
+    #if dino.gameOver == True:
+    #    time.sleep(0.5)
+    #    print('ok')
+    #    dino.gameOver = False
+    #    dino.gameplay()
 th.join()

@@ -519,23 +519,23 @@ def gameplay():
             break
 
         while gameOver:
-            #if pygame.display.get_surface() == None:
-            #   print("Couldn't load display surface")
-            #    gameQuit = True
-            #    gameOver = False
-            #else:
-            #   for event in pygame.event.get():
-            #        if event.type == pygame.QUIT:
-            #            gameQuit = True
-            #            gameOver = False
-            #        if event.type == pygame.KEYDOWN:
-            #            if event.key == pygame.K_ESCAPE:
-            #                gameQuit = True
-            #                gameOver = False
-                        #if event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
-                        #gameOver = False
-                        #gameplay()
-            highsc.update(high_score)
+            if pygame.display.get_surface() == None:
+                print("Couldn't load display surface")
+                gameQuit = True
+                gameOver = False
+            else:
+               for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        gameQuit = True
+                        gameOver = False
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE:
+                            gameQuit = True
+                            gameOver = False
+                        if event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
+                            gameOver = False
+                            gameplay()
+               highsc.update(high_score)
             if pygame.display.get_surface() != None:
                 disp_gameOver_msg(retbutton_image,gameover_image)
                 if high_score != 0:
@@ -543,10 +543,10 @@ def gameplay():
                     screen.blit(HI_image,HI_rect)
                 pygame.display.update()
             clock.tick(FPS)
-            #reiniciar o jogo
-            time.delay(500)
-            gameOver = False
-            gameplay()
+            #reiniciar o jogo automaticamente
+            #time.delay(500)
+            #gameOver = False
+            #gameplay()
 
     pygame.quit()
     quit()
