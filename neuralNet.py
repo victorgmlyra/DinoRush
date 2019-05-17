@@ -1,6 +1,5 @@
 import random
 import numpy as np
-import time
 
 # Activation functions
 def relu(x):
@@ -17,14 +16,15 @@ class neuralNet:
         self.network = []
         for i, neurons in enumerate(hidden_layers):
             if i == 0:
-                self.network.append(np.random.randn(num_inputs + 1, neurons)) # Matrix containing wheights and biases
+                self.network.append(np.random.rand(num_inputs + 1, neurons)) # Matrix containing wheights and biases
             else:
-                self.network.append(np.random.randn(hidden_layers[i-1] + 1, neurons))
+                self.network.append(np.random.rand(hidden_layers[i-1] + 1, neurons))
 
         if len(hidden_layers) > 0:
-            self.network.append(np.random.randn(hidden_layers[-1] + 1, num_outputs))
+            self.network.append(np.random.rand(hidden_layers[-1] + 1, num_outputs))
         else:
-            self.network.append(np.random.randn(num_inputs + 1, num_outputs))
+            self.network.append(np.random.rand(num_inputs + 1, num_outputs))
+
 
     # Run Neural Network with given input    
     def run(self, inputs):
@@ -35,8 +35,9 @@ class neuralNet:
             out = fast_sigmoid(out)
         return out
         
+
 # Testes
-rede = neuralNet(2, 2, [2, 4])
-print(rede.run([1, 1]))
-print()
-print(rede.network)
+# rede = neuralNet(2, 2, [2, 4])
+# print(rede.run([1, 1]))
+# print()
+# print(rede.network)
