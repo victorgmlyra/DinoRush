@@ -13,6 +13,7 @@ pygame.init()
 up = (1, 0)
 down = (0, 1)
 non = (0, 0)
+restart = (1 ,1)
 
 scr_size = (width,height) = (600,150)
 FPS = 60
@@ -544,9 +545,9 @@ def gameplay():
                 pygame.display.update()
             clock.tick(FPS)
             #reiniciar o jogo automaticamente
-            #time.delay(500)
-            #gameOver = False
-            #gameplay()
+            if keys == restart:
+                gameOver = False
+                gameplay()
 
     pygame.quit()
     quit()
@@ -555,5 +556,4 @@ def play():
     isGameQuit = introscreen()
     if not isGameQuit:
         gameplay()
-
 # play()
