@@ -19,6 +19,7 @@ scr_size = (width,height) = (600,150)
 FPS = 60
 gravity = 0.6
 
+n_rex = 3
 black = (0,0,0)
 white = (255,255,255)
 background_col = (235,235,235)
@@ -353,9 +354,10 @@ def introscreen():
 
 # Variáveis de jogo
 gamespeed = 4
-gameOver = [False for n in range(1, 3)]
-playerDino = [Dino(44,47) for n in range(1, 3)]
+gameOver = [False for n in range(n_rex)]
+playerDino = [Dino(44,47) for n in range(n_rex)]
 keys = non
+
 
 cacti = pygame.sprite.Group()
 pteras = pygame.sprite.Group()
@@ -366,14 +368,15 @@ dists = []
 heights = []
 
 def gameplay():
+    global n_rex
     global high_score
     global gamespeed
     global keys
     gamespeed = 4
     global gameOver
-    gameOver = [False for n in range(1, 3)]
+    gameOver = [False for n in range(n_rex)]
     global playerDino
-    playerDino = [Dino(44,47) for n in range(1, 3)]
+    playerDino = [Dino(44,47) for n in range(n_rex)]
     startMenu = False
     gameQuit = False
     new_ground = Ground(-1*gamespeed)
@@ -420,12 +423,12 @@ def gameplay():
             if pygame.display.get_surface() == None:
                 print("Couldn't load display surface")
                 gameQuit = True
-                gameOver = [True for n in range(1, 3)]
+                gameOver = [True for n in range(n_rex)]
             else:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         gameQuit = True
-                        gameOver = [True for n in range(1, 3)]
+                        gameOver = [True for n in range(n_rex)]
 
                 # Mudado a forma de controlar o dinossauro
                 #keys = pygame.key.get_pressed()                

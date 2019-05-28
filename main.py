@@ -17,9 +17,9 @@ while True:
     time.sleep(random.random())
     # print(dino.dists, dino.heights, dino.gamespeed, dino.keys)
     x+=1
-    while dino.gameOver == True:
+    while all(dino.gameOver):
         time.sleep(0.3)
         dino.keys = dino.restart
-        
+    
         
 th.join()
