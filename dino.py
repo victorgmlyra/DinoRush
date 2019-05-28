@@ -354,7 +354,7 @@ def introscreen():
 # Variáveis de jogo
 gamespeed = 4
 gameOver = False
-playerDino = Dino(44,47)
+playerDino = [Dino(44,47) for n in range(1, 3)]
 keys = non
 
 cacti = pygame.sprite.Group()
@@ -373,7 +373,7 @@ def gameplay():
     global gameOver
     gameOver = False
     global playerDino
-    playerDino = Dino(44,47)
+    playerDino = [Dino(44,47) for n in range(1, 3)]
     startMenu = False
     gameQuit = False
     new_ground = Ground(-1*gamespeed)
@@ -429,39 +429,41 @@ def gameplay():
 
                 # Mudado a forma de controlar o dinossauro
                 #keys = pygame.key.get_pressed()                
-
-                if not playerDino.isJumping:
+            for rex in playerDino:
+                if not rex.isJumping:
                     if keys == up:
-                        if (playerDino.rect.bottom == int(0.98*height)): #if playerDino.rect.bottom == int(0.98*height) and not playerDino.isDucking:
-                            playerDino.isJumping = True
+                        if (rex.rect.bottom == int(0.98*height)): #if playerDino.rect.bottom == int(0.98*height) and not playerDino.isDucking:
+                            rex.isJumping = True
                             if pygame.mixer.get_init() != None:
                                 jump_sound.play()
-                            playerDino.movement[1] = -1*playerDino.jumpSpeed
+                            rex.movement[1] = -1*rex.jumpSpeed
 
                     if keys == down: 
-                        if not (playerDino.isDead): #if not (playerDino.isJumping and playerDino.isDead):
-                            playerDino.isDucking = True
+                        if not (rex.isDead): #if not (playerDino.isJumping and playerDino.isDead):
+                            rex.isDucking = True
                     else:
-                        playerDino.isDucking = False
+                        rex.isDucking = False
 
 
             for c in cacti:
-                c.movement[0] = -1*gamespeed
-                heights.append(c.rect.centery)
-                dists.append(c.rect.left - playerDino.rect.right)
-                if pygame.sprite.collide_mask(playerDino,c):
-                    playerDino.isDead = True
-                    if pygame.mixer.get_init() != None:
-                        die_sound.play()
+                for rex in playerDino:
+                    c.movement[0] = -1*gamespeed
+                    heights.append(c.rect.centery)
+                    dists.append(c.rect.left - rex.rect.right)
+                    if pygame.sprite.collide_mask(rex,c):
+                        rex.isDead = True
+                        if pygame.mixer.get_init() != None:
+                            die_sound.play()
 
             for p in pteras:
-                p.movement[0] = -1*gamespeed
-                heights.append(p.rect.centery)
-                dists.append(p.rect.left - playerDino.rect.right)
-                if pygame.sprite.collide_mask(playerDino,p):
-                    playerDino.isDead = True
-                    if pygame.mixer.get_init() != None:
-                        die_sound.play()
+                for rex in playerDino:
+                    p.movement[0] = -1*gamespeed
+                    heights.append(p.rect.centery)
+                    dists.append(p.rect.left - rex.rect.right)
+                    if pygame.sprite.collide_mask(rex,p):
+                        rex.isDead = True
+                        if pygame.mixer.get_init() != None:
+                            die_sound.play()
 
             if len(cacti) < 2:
                 if len(cacti) == 0:
@@ -482,12 +484,15 @@ def gameplay():
             if len(clouds) < 5 and random.randrange(0,300) == 10:
                 Cloud(width,random.randrange(height/5,height/2))
 
-            playerDino.update()
+
+            for rex in playerDino:
+                rex.update()
             cacti.update()
             pteras.update()
             clouds.update()
             new_ground.update()
-            scb.update(playerDino.score)
+            for rex in playerDino:
+                scb.update(rex.score)
             highsc.update(high_score)
 
             if pygame.display.get_surface() != None:
@@ -500,15 +505,17 @@ def gameplay():
                     screen.blit(HI_image,HI_rect)
                 cacti.draw(screen)
                 pteras.draw(screen)
-                playerDino.draw()
+                for rex in playerDino:
+                    rex.draw()
 
                 pygame.display.update()
             clock.tick(FPS)
-
-            if playerDino.isDead:
-                gameOver = True
-                if playerDino.score > high_score:
-                    high_score = playerDino.score
+            
+            for rex in playerDino:
+                if rex.isDead:
+                    gameOver = True
+                    if rex.score > high_score:
+                        high_score = rex.score
 
             if counter%700 == 699:
                 new_ground.speed -= 1
