@@ -15,7 +15,7 @@ x=1
 while True:
     dino.keys = dino.up if x%2==0 else dino.down
     time.sleep(random.random())
-    print(dino.dists, dino.heights, dino.gamespeed, dino.keys)
+    # print(dino.dists, dino.heights, dino.gamespeed, dino.keys)
     x+=1
     while dino.gameOver == True:
         time.sleep(0.3)

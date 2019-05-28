@@ -353,7 +353,7 @@ def introscreen():
 
 # Variáveis de jogo
 gamespeed = 4
-gameOver = False
+gameOver = [False for n in range(1, 3)]
 playerDino = [Dino(44,47) for n in range(1, 3)]
 keys = non
 
@@ -371,7 +371,7 @@ def gameplay():
     global keys
     gamespeed = 4
     global gameOver
-    gameOver = False
+    gameOver = [False for n in range(1, 3)]
     global playerDino
     playerDino = [Dino(44,47) for n in range(1, 3)]
     startMenu = False
@@ -413,19 +413,19 @@ def gameplay():
     while not gameQuit:
         while startMenu:
             pass
-        while not gameOver:
+        while not all(gameOver):
             dists = [] 
             heights = []
 
             if pygame.display.get_surface() == None:
                 print("Couldn't load display surface")
                 gameQuit = True
-                gameOver = True
+                gameOver = [True for n in range(1, 3)]
             else:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         gameQuit = True
-                        gameOver = True
+                        gameOver = [True for n in range(1, 3)]
 
                 # Mudado a forma de controlar o dinossauro
                 #keys = pygame.key.get_pressed()                
@@ -443,6 +443,8 @@ def gameplay():
                             rex.isDucking = True
                     else:
                         rex.isDucking = False
+                
+                break
 
 
             for c in cacti:
@@ -511,9 +513,9 @@ def gameplay():
                 pygame.display.update()
             clock.tick(FPS)
             
-            for rex in playerDino:
+            for i, rex in enumerate(playerDino):
                 if rex.isDead:
-                    gameOver = True
+                    gameOver[i] = True
                     if rex.score > high_score:
                         high_score = rex.score
 
@@ -526,7 +528,7 @@ def gameplay():
         if gameQuit:
             break
 
-        while gameOver:
+        while all(gameOver):
             if pygame.display.get_surface() == None:
                 print("Couldn't load display surface")
                 gameQuit = True
