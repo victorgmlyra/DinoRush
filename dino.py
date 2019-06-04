@@ -6,6 +6,7 @@ import sys
 import pygame
 import random
 from pygame import *
+import neuralNet as nn
 
 pygame.init()
 
@@ -19,7 +20,7 @@ scr_size = (width,height) = (600,150)
 FPS = 60
 gravity = 0.6
 
-n_rex = 5
+n_rex = 20
 black = (0,0,0)
 white = (255,255,255)
 background_col = (235,235,235)
@@ -354,6 +355,8 @@ def introscreen():
 
 
 # Variáveis de jogo
+redes = [nn.neuralNet(3, 1, [5]) for i in range(n_rex)]
+dead = []
 gamespeed = 4
 gameOver = [False for n in range(n_rex)]
 playerDino = [Dino(44,47) for n in range(n_rex)]
@@ -369,6 +372,8 @@ dists = []
 heights = []
 
 def gameplay():
+    global redes
+    global dead
     global n_rex
     global high_score
     global last_score
@@ -455,22 +460,22 @@ def gameplay():
             for c in cacti:
                 for rex in playerDino:
                     c.movement[0] = -1*gamespeed
-                    heights.append(c.rect.centery)
-                    dists.append(c.rect.left - rex.rect.right)
                     if pygame.sprite.collide_mask(rex,c):
                         rex.isDead = True
                         if pygame.mixer.get_init() != None:
                             die_sound.play()
+                dists.append(c.rect.left - rex.rect.right)
+                heights.append(c.rect.centery)
 
             for p in pteras:
                 for rex in playerDino:
                     p.movement[0] = -1*gamespeed
-                    heights.append(p.rect.centery)
-                    dists.append(p.rect.left - rex.rect.right)
                     if pygame.sprite.collide_mask(rex,p):
                         rex.isDead = True
                         if pygame.mixer.get_init() != None:
                             die_sound.play()
+                dists.append(p.rect.left - rex.rect.right)
+                heights.append(p.rect.centery)
 
             if len(cacti) < 2:
                 if len(cacti) == 0:
@@ -482,7 +487,7 @@ def gameplay():
                             last_obstacle.empty()
                             last_obstacle.add(Cactus(gamespeed, 40, 40))
 
-            if len(pteras) == 0 and random.randrange(0,150) == 10 and counter > 500:
+            if len(pteras) == 0 and random.randrange(0,100) < 10 and counter > 50:
                 for l in last_obstacle:
                     if l.rect.right < width*0.4:
                         last_obstacle.empty()
@@ -524,6 +529,8 @@ def gameplay():
                     last_score.append(rex.score)
                     del(playerDino[i])
                     del(keys[i])
+                    dead.append(redes[i])
+                    del(redes[i])
                     if rex.score > high_score:
                         high_score = rex.score
             if counter%700 == 699:
@@ -564,6 +571,7 @@ def gameplay():
             if restart:
                 gameOver = False
                 last_score = []
+                dead = []
                 restart = False
                 gameplay()
 
