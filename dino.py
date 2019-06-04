@@ -13,13 +13,13 @@ pygame.init()
 up = (1, 0)
 down = (0, 1)
 non = (0, 0)
-restart = (1 ,1)
+restart = False
 
 scr_size = (width,height) = (600,150)
 FPS = 60
 gravity = 0.6
 
-n_rex = 2
+n_rex = 5
 black = (0,0,0)
 white = (255,255,255)
 background_col = (235,235,235)
@@ -357,7 +357,7 @@ def introscreen():
 gamespeed = 4
 gameOver = [False for n in range(n_rex)]
 playerDino = [Dino(44,47) for n in range(n_rex)]
-keys = non
+keys = [non for n in range(n_rex)]
 
 
 cacti = pygame.sprite.Group()
@@ -374,11 +374,13 @@ def gameplay():
     global last_score
     global gamespeed
     global keys
+    global restart
     gamespeed = 4
     global gameOver
     gameOver = [False for n in range(n_rex)]
     global playerDino
     playerDino = [Dino(44,47) for n in range(n_rex)]
+    keys = [non for n in range(n_rex)]
     startMenu = False
     gameQuit = False
     new_ground = Ground(-1*gamespeed)
@@ -434,22 +436,20 @@ def gameplay():
 
                 # Mudado a forma de controlar o dinossauro
                 #keys = pygame.key.get_pressed()                
-            for rex in playerDino:
+            for j, rex in enumerate(playerDino):
                 if not rex.isJumping:
-                    if keys == up:
+                    if keys[j] == up:
                         if (rex.rect.bottom == int(0.98*height)): #if playerDino.rect.bottom == int(0.98*height) and not playerDino.isDucking:
                             rex.isJumping = True
                             if pygame.mixer.get_init() != None:
                                 jump_sound.play()
                             rex.movement[1] = -1*rex.jumpSpeed
 
-                    if keys == down: 
+                    if keys[j] == down: 
                         if not (rex.isDead): #if not (playerDino.isJumping and playerDino.isDead):
                             rex.isDucking = True
                     else:
                         rex.isDucking = False
-                
-                break
 
 
             for c in cacti:
@@ -523,9 +523,9 @@ def gameplay():
                     gameOver[i] = True
                     last_score.append(rex.score)
                     del(playerDino[i])
+                    del(keys[i])
                     if rex.score > high_score:
                         high_score = rex.score
-
             if counter%700 == 699:
                 new_ground.speed -= 1
                 gamespeed += 1
@@ -561,9 +561,10 @@ def gameplay():
                 pygame.display.update()
             clock.tick(FPS)
             #reiniciar o jogo automaticamente
-            if keys == restart:
-                last_score = []
+            if restart:
                 gameOver = False
+                last_score = []
+                restart = False
                 gameplay()
 
     pygame.quit()
