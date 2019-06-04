@@ -19,12 +19,13 @@ scr_size = (width,height) = (600,150)
 FPS = 60
 gravity = 0.6
 
-n_rex = 3
+n_rex = 2
 black = (0,0,0)
 white = (255,255,255)
 background_col = (235,235,235)
 
 high_score = 0
+last_score = []
 
 screen = pygame.display.set_mode(scr_size)
 clock = pygame.time.Clock()
@@ -370,6 +371,7 @@ heights = []
 def gameplay():
     global n_rex
     global high_score
+    global last_score
     global gamespeed
     global keys
     gamespeed = 4
@@ -416,7 +418,7 @@ def gameplay():
     while not gameQuit:
         while startMenu:
             pass
-        while not all(gameOver):
+        while playerDino:
             dists = [] 
             heights = []
 
@@ -519,6 +521,8 @@ def gameplay():
             for i, rex in enumerate(playerDino):
                 if rex.isDead:
                     gameOver[i] = True
+                    last_score.append(rex.score)
+                    del(playerDino[i])
                     if rex.score > high_score:
                         high_score = rex.score
 
@@ -531,7 +535,7 @@ def gameplay():
         if gameQuit:
             break
 
-        while all(gameOver):
+        while not playerDino:
             if pygame.display.get_surface() == None:
                 print("Couldn't load display surface")
                 gameQuit = True
@@ -558,6 +562,7 @@ def gameplay():
             clock.tick(FPS)
             #reiniciar o jogo automaticamente
             if keys == restart:
+                last_score = []
                 gameOver = False
                 gameplay()
 

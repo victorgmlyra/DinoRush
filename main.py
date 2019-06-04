@@ -17,9 +17,11 @@ while True:
     time.sleep(random.random())
     # print(dino.dists, dino.heights, dino.gamespeed, dino.keys)
     x+=1
-    while all(dino.gameOver):
+    while not dino.playerDino:
         time.sleep(0.3)
         dino.keys = dino.restart
+        print(dino.last_score)
+        time.sleep(0.8)
     
         
 th.join()
