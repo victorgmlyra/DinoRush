@@ -33,8 +33,8 @@ clock = pygame.time.Clock()
 pygame.display.set_caption("T-Rex Rush")
 
 jump_sound = pygame.mixer.Sound('Game/sprites/jump.wav')
-die_sound = pygame.mixer.Sound('Game/sprites/die.wav')
-checkPoint_sound = pygame.mixer.Sound('Game/sprites/checkPoint.wav')
+die_sound = pygame.mixer.Sound('Game/sprites/doh2.wav')
+checkPoint_sound = pygame.mixer.Sound('Game/sprites/record.wav')
 
 def load_image(
     name,
