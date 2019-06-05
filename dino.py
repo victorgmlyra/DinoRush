@@ -32,9 +32,13 @@ screen = pygame.display.set_mode(scr_size)
 clock = pygame.time.Clock()
 pygame.display.set_caption("T-Rex Rush")
 
+init_sound = pygame.mixer.Sound('Game/sprites/thank_you.wav')
 jump_sound = pygame.mixer.Sound('Game/sprites/jump.wav')
-die_sound = pygame.mixer.Sound('Game/sprites/doh2.wav')
-checkPoint_sound = pygame.mixer.Sound('Game/sprites/record.wav')
+die_sound = pygame.mixer.Sound('Game/sprites/doh1.wav')
+checkPoint_sound1 = pygame.mixer.Sound('Game/sprites/Ooooh.wav')
+checkPoint_sound2 = pygame.mixer.Sound('Game/sprites/woo.wav')
+checkPoint_sound3 = pygame.mixer.Sound('Game/sprites/fuck_god.wav')
+high_score_sound = pygame.mixer.Sound('Game/sprites/lick.wav')
 
 def load_image(
     name,
@@ -190,9 +194,15 @@ class Dino():
 
         if not self.isDead and self.counter % 7 == 6 and self.isBlinking == False:
             self.score += 1
-            if self.score % 100 == 0 and self.score != 0:
+            if self.score == 100:
                 if pygame.mixer.get_init() != None:
-                    checkPoint_sound.play()
+                    checkPoint_sound1.play()
+            if self.score % 100 == 0 and self.score > 110 and self.score <390:
+                if pygame.mixer.get_init() != None:
+                    checkPoint_sound2.play()
+            if self.score % 100 == 0 and self.score > 388:
+                if pygame.mixer.get_init() != None:
+                    checkPoint_sound3.play()
 
         self.counter = (self.counter + 1)
 
@@ -462,8 +472,8 @@ def gameplay():
                     c.movement[0] = -1*gamespeed
                     if pygame.sprite.collide_mask(rex,c):
                         rex.isDead = True
-                        if pygame.mixer.get_init() != None:
-                            die_sound.play()
+                        #if pygame.mixer.get_init() != None:
+                        #    die_sound.play()
                 dists.append(c.rect.left - rex.rect.right)
                 heights.append(c.rect.centery)
 
@@ -472,8 +482,8 @@ def gameplay():
                     p.movement[0] = -1*gamespeed
                     if pygame.sprite.collide_mask(rex,p):
                         rex.isDead = True
-                        if pygame.mixer.get_init() != None:
-                            die_sound.play()
+                        #if pygame.mixer.get_init() != None:
+                        #    die_sound.play()
                 dists.append(p.rect.left - rex.rect.right)
                 heights.append(p.rect.centery)
 
@@ -487,7 +497,7 @@ def gameplay():
                             last_obstacle.empty()
                             last_obstacle.add(Cactus(gamespeed, 40, 40))
 
-            if len(pteras) == 0 and random.randrange(0,100) < 10 and counter > 50:
+            if len(pteras) == 0 and random.randrange(0,150) < 3 and counter > 100:
                 for l in last_obstacle:
                     if l.rect.right < width*0.4:
                         last_obstacle.empty()
@@ -531,8 +541,14 @@ def gameplay():
                     del(keys[i])
                     dead.append(redes[i])
                     del(redes[i])
+                    if pygame.mixer.get_init() != None:
+                            die_sound.play()
                     if rex.score > high_score:
                         high_score = rex.score
+                        if not playerDino:
+                            if pygame.mixer.get_init() != None:
+                                high_score_sound.play()
+                                                
             if counter%700 == 699:
                 new_ground.speed -= 1
                 gamespeed += 1
@@ -579,6 +595,8 @@ def gameplay():
     quit()
 
 def play():
+    if pygame.mixer.get_init() != None:
+        init_sound.play()
     isGameQuit = introscreen()
     if not isGameQuit:
         gameplay()
