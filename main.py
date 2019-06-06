@@ -1,6 +1,6 @@
 from numpy import random
 import threading
-import time
+import time, keyboard
 import dino
 import neuralNet as nn
 import heritage 
@@ -11,7 +11,6 @@ import heritage
 gen = 1
 th = threading.Thread(target = dino.play) 
 th.start()
-
 
 print('Generation: ', gen)
 while True:
@@ -29,13 +28,14 @@ while True:
         input_params = [height, dist, dino.gamespeed]
         if n < len(dino.playerDino):
             out = dino.redes[n].run(input_params)
-            if out > 0.4 and n < len(dino.keys): 
+            if out > 0.4 and n < len(dino.keys):
                 dino.keys[n] = dino.up
             elif out < -0.4 and n < len(dino.keys):
                 dino.keys[n] = dino.down
             else:
                 if n < len(dino.keys):
                     dino.keys[n] = dino.non
+
     if not dino.playerDino:
         gen +=1
         time.sleep(0.3) 

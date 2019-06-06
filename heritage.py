@@ -31,7 +31,7 @@ def crossover(parents):
 
 # Randomize a child gene with a certain probability
 def mutate(child, prob_mutate):
-    m = lambda x, prop_m : random.random()*2 - 1 if random.random() <= prop_m else x
+    m = lambda x, prop_m : np.random.randn(1)[0] if random.random() <= prop_m else x
     func = np.vectorize(m)
     for i in range(len(child.network)):
         child.network[i] = func(child.network[i], prob_mutate)
