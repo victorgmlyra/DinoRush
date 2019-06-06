@@ -16,11 +16,11 @@ down = (0, 1)
 non = (0, 0)
 restart = False
 
-scr_size = (width,height) = (600,150)
+scr_size = (width,height) = (1200,150)
 FPS = 60
 gravity = 0.6
 
-n_rex = 2
+n_rex = 20
 black = (0,0,0)
 white = (255,255,255)
 background_col = (235,235,235)
@@ -128,9 +128,13 @@ def extractDigits(number):
         return digits
 
 class Dino():
-    def __init__(self,sizex=-1,sizey=-1):
-        self.images,self.rect = load_sprite_sheet('dino.png',5,1,sizex,sizey,-1)
-        self.images1,self.rect1 = load_sprite_sheet('dino_ducking.png',2,1,59,sizey,-1)
+    def __init__(self,sizex=-1,sizey=-1, p = False):
+        if not p:
+            self.images,self.rect = load_sprite_sheet('dino.png',5,1,sizex,sizey,-1)
+            self.images1,self.rect1 = load_sprite_sheet('dino_ducking.png',2,1,59,sizey,-1)
+        else: 
+            self.images,self.rect = load_sprite_sheet('dino_p.png',5,1,sizex,sizey,-1)
+            self.images1,self.rect1 = load_sprite_sheet('dino_ducking_p.png',2,1,59,sizey,-1)
         self.rect.bottom = int(0.98*height)
         self.rect.left = width/15
         self.image = self.images[0]
@@ -367,11 +371,11 @@ def introscreen():
 # Variáveis de jogo
 redes = [nn.neuralNet(3, 1, [5]) for i in range(n_rex)]
 dead = []
-gamespeed = 4
+gamespeed = 12
 gameOver = [False for n in range(n_rex)]
 p_gameOver = False
 playerDino = [Dino(44,47) for n in range(n_rex)]
-player = (Dino(44,47))
+player = (Dino(44,47, True))
 keys = [non for n in range(n_rex)]
 
 
@@ -393,14 +397,14 @@ def gameplay():
     global gamespeed
     global keys
     global restart
-    gamespeed = 4
+    gamespeed = 12
     global gameOver
     gameOver = [False for n in range(n_rex)]
     global playerDino
     playerDino = [Dino(44,47) for n in range(n_rex)]
     global player
     global p_gameOver
-    player = (Dino(44,47))
+    player = (Dino(44,47, True))
     keys = [non for n in range(n_rex)]
     startMenu = False
     gameQuit = False
@@ -461,19 +465,20 @@ def gameplay():
 
             #controlando o dino player
             p_keys = pygame.key.get_pressed()     
-            if not player.isJumping:
-                if p_keys[pygame.K_UP]:
-                    if (player.rect.bottom == int(0.98*height)): 
-                        player.isJumping = True
-                        if pygame.mixer.get_init() != None:
-                            jump_sound.play()
-                        player.movement[1] = -1*player.jumpSpeed
+            if not p_gameOver:
+                if not player.isJumping:
+                    if p_keys[pygame.K_UP]:
+                        if (player.rect.bottom == int(0.98*height)): 
+                            player.isJumping = True
+                            if pygame.mixer.get_init() != None:
+                                jump_sound.play()
+                            player.movement[1] = -1*player.jumpSpeed
 
-                if p_keys[pygame.K_DOWN]: 
-                    if not (player.isDead):
-                        player.isDucking = True
-                else:
-                    player.isDucking = False
+                    if p_keys[pygame.K_DOWN]: 
+                        if not (player.isDead):
+                            player.isDucking = True
+                    else:
+                        player.isDucking = False
                     
             # controlando o dino da rede
             for j, rex in enumerate(playerDino):
@@ -496,19 +501,20 @@ def gameplay():
 
 
             #Verificando colisão com o dino player
-            for c in cacti:
-                c.movement[0] = -1*gamespeed
-                if pygame.sprite.collide_mask(player,c):
-                    player.isDead = True
-                dists.append(c.rect.left - rex.rect.right)
-                heights.append(c.rect.centery)
+            if not p_gameOver:
+                for c in cacti:
+                    c.movement[0] = -1*gamespeed
+                    if pygame.sprite.collide_mask(player,c):
+                        player.isDead = True
+                    dists.append(c.rect.left - rex.rect.right)
+                    heights.append(c.rect.centery)
 
-            for p in pteras:
-                p.movement[0] = -1*gamespeed
-                if pygame.sprite.collide_mask(player,p):
-                    player.isDead = True
-                dists.append(p.rect.left - rex.rect.right)
-                heights.append(p.rect.centery)
+                for p in pteras:
+                    p.movement[0] = -1*gamespeed
+                    if pygame.sprite.collide_mask(player,p):
+                        player.isDead = True
+                    dists.append(p.rect.left - rex.rect.right)
+                    heights.append(p.rect.centery)
 
             #Verificando colisão com os dinos da rede
             for c in cacti:
@@ -555,8 +561,9 @@ def gameplay():
 
             for rex in playerDino:
                 rex.update()
-            player.update()
-            scb.update(player.score)
+            if not p_gameOver:
+                player.update()
+                scb.update(player.score)
             cacti.update()
             pteras.update()
             clouds.update()
@@ -575,9 +582,10 @@ def gameplay():
                     screen.blit(HI_image,HI_rect)
                 cacti.draw(screen)
                 pteras.draw(screen)
-                player.draw()
                 for rex in playerDino:
                     rex.draw()
+                if not p_gameOver:
+                    player.draw()
                 pygame.display.update()
             clock.tick(FPS)
             
@@ -585,10 +593,11 @@ def gameplay():
 
 
             #Verificando mortes dos dinos da rede
-            if player.isDead:
-                    p_gameOver = True
-                    del(player)
-                    die_sound_player.play()
+            if not p_gameOver:
+                if player.isDead:
+                        p_gameOver = True
+                        del(player)
+                        die_sound_player.play()
 
             #Verificando mortes dos dinos da rede
             for i, rex in enumerate(playerDino):
@@ -618,7 +627,7 @@ def gameplay():
         if gameQuit:
             break
 
-        while not playerDino:
+        while not playerDino or p_gameOver:
             if pygame.display.get_surface() == None:
                 print("Couldn't load display surface")
                 gameQuit = True

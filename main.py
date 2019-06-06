@@ -8,20 +8,20 @@ import heritage
 # dino.heights = lista com a altura de todos os obstaculos na tela
 # dino.gamespeed = velocidade do jogo
 
-
+gen = 1
 th = threading.Thread(target = dino.play) 
 th.start()
-x=1
 
 
+print('Generation: ', gen)
 while True:
     params = list(zip(dino.heights, dino.dists))
     params = sorted(params, key=lambda x: x[1])
-    height = 0
+    height = 127
     dist = 600
     for param in params:
         if param[1] >= 0:
-            height = param[0]
+            height = param[0] if param[0]>100 else 20
             dist = param[1]
             break
 
@@ -37,11 +37,13 @@ while True:
                 if n < len(dino.keys):
                     dino.keys[n] = dino.non
     if not dino.playerDino:
+        gen +=1
         time.sleep(0.3) 
         pop = list(zip(dino.dead, dino.last_score))
         dino.redes = heritage.create_new_population(pop) 
         time.sleep(1.5) 
         dino.restart = True
+        print('Generation: ', gen)
         time.sleep(0.8) 
     
         
