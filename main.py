@@ -1,6 +1,6 @@
 from numpy import random
 import threading
-import time, keyboard
+import time
 import dino
 import neuralNet as nn
 import heritage 
