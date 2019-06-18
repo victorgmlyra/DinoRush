@@ -14,17 +14,11 @@ th.start()
 
 print('Generation: ', gen)
 while True:
-    params = list(zip(dino.heights, dino.dists))
-    params = sorted(params, key=lambda x: x[1])
-    height = 127
-    dist = 600
-    for param in params:
-        if param[1] >= 0:
-            height = param[0] if param[0]>100 else 20
-            dist = param[1]
-            break
+    params = sorted(zip(dino.heights, dino.dists)), key=lambda x: x[1])
+    params = [h, d for h, d in params if d >= 0]
+    height, dist = params[0] if params else 127, 600
 
-    for n in range(len(dino.playerDino)):
+    for n, _ in enumerate(dino.playerDino):
         input_params = [height, dist, dino.gamespeed]
         if n < len(dino.playerDino):
             out = dino.redes[n].run(input_params)

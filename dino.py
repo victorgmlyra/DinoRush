@@ -397,7 +397,7 @@ def gameplay():
     global gamespeed
     global keys
     global restart
-    gamespeed = 12
+    gamespeed = 7
     global gameOver
     gameOver = [False for n in range(n_rex)]
     global playerDino
