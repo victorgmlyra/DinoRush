@@ -16,11 +16,11 @@ down = (0, 1)
 non = (0, 0)
 restart = False
 
-scr_size = (width,height) = (1200,150)
+scr_size = (width,height) = (600,150)
 FPS = 60
 gravity = 0.6
 
-n_rex = 20
+n_rex = 10
 black = (0,0,0)
 white = (255,255,255)
 background_col = (235,235,235)
@@ -52,7 +52,7 @@ def load_image(
     image = pygame.image.load(fullname)
     image = image.convert()
     if colorkey is not None:
-        if colorkey is -1:
+        if colorkey == -1:
             colorkey = image.get_at((0, 0))
         image.set_colorkey(colorkey, RLEACCEL)
 
@@ -88,7 +88,7 @@ def load_sprite_sheet(
             image.blit(sheet,(0,0),rect)
 
             if colorkey is not None:
-                if colorkey is -1:
+                if colorkey == -1:
                     colorkey = image.get_at((0,0))
                 image.set_colorkey(colorkey,RLEACCEL)
 
